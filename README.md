@@ -6,5 +6,5 @@ This repositary that will contain the projects of the data visualization class. 
 
 ## Project 1
 
-### This project is an exploratory analysis about traffc fatality data in the US
+This project is an exploratory analysis about traffc fatality data in the US
 
