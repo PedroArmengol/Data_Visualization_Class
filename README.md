@@ -8,4 +8,10 @@ This repositary that will contain the projects of the data visualization class. 
 
 This project is an exploratory analysis about traffc fatality data in the US
 
-### This is a testing
+The datasets used in this exercise are here:
+
+• The 2014 SAS Data ftp://ftp.nhtsa.dot.gov/FARS/2014/National/
+
+• The 2015 CSV Data: ftp://ftp.nhtsa.dot.gov/FARS/2015/National/
+
+
