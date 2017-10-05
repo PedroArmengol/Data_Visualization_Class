@@ -47,6 +47,8 @@ acc$STATE <- as.character(acc$STATE)
 acc$COUNTY <- as.character(acc$COUNTY)
 fips$StateFIPSCode <- as.character(fips$StateFIPSCode)
 fips$CountyFIPSCode <- as.character(fips$CountyFIPSCode)
+fips <- rename(fips, c("X...StateName"="StateName"))
+
 ##Standarize keys
 acc$STATE <- str_pad(acc$STATE, 2, side = c("left"), pad = "0")
 acc$COUNTY <- str_pad(acc$COUNTY, 3, side = c("left"), pad = "0")
@@ -57,3 +59,25 @@ acc <- rename(acc, c("STATE"="StateFIPSCode", "COUNTY"="CountyFIPSCode"))
 #Merge fips and acc
 acc <- left_join(acc, fips, by = c("StateFIPSCode", "CountyFIPSCode"))
 
+#Descriptive Statistics 
+#Aggregate data
+agg <- acc %>%
+  dplyr::group_by(YEAR,StateName) %>%
+  dplyr::summarize(TOTAL = sum(FATALS))
+#Change from long to wide and other stuff
+agg_wide <- tidyr::spread(agg,YEAR,TOTAL)
+agg_wide <- mutate(agg_wide, per_diff = ((agg_wide$"2015" - agg_wide$"2014")/agg_wide$"2014")*100)
+agg_wide <- arrange(agg_wide, desc(per_diff))
+agg_wide <- filter(agg_wide, per_diff > 15 & !is.na(StateName))
+
+# In a single shot (Without <-)
+#Aggregate data
+agg <- acc %>%
+  dplyr::group_by(YEAR,StateName) %>%
+  dplyr::summarize(TOTAL = sum(FATALS)) %>%
+  tidyr::spread(agg,YEAR,TOTAL) %>%
+  mutate(per_diff = (("2015" - "2014")/"2014")*100) %>%
+  arrange(desc(per_diff)) %>%
+  filter(per_diff > 15 & !is.na(StateName))
+
+glimpse(agg_wide)
