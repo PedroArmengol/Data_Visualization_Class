@@ -23,10 +23,17 @@ table(is.na(acc2014$TWAY_ID2))
 dim(acc2014)
 dim(acc2015)
 
-
+#Keep commun columns in both datasets
+#ROAD_FNC: this variable is just in the 2014 dataset
 elem1 <-  colnames(acc2014)[colnames(acc2014) %in% colnames(acc2015) == FALSE]
 elem1
+# RUR_URB"  "FUNC_SYS" "RD_OWNER": this three variables are in the 2015 dataset
 elem2 <- colnames(acc2015)[colnames(acc2015) %in% colnames(acc2014) == FALSE]
 elem2
+#Append
+acc <-bind_rows(acc2014,acc2015)
+
+count(acc,RUR_URB)
+# The 30,056 NA is because the table acc2014 doesn't have information for this variable
 
 
