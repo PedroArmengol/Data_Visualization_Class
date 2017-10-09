@@ -81,3 +81,26 @@ agg <- acc %>%
   filter(per_diff > 15 & !is.na(StateName))
 
 glimpse(agg_wide)
+
+### Charts 
+
+# Day of fatalities and drunk status: When fun comes to die
+d1 <- acc %>%
+  dplyr::group_by(DAY_WEEK,DRUNK_DR) %>%
+  dplyr::summarize(TOTAL = sum(FATALS)) 
+  
+g1 <- ggplot(d1, aes(x = DAY_WEEK, y = TOTAL)) 
+g1 + geom_bar(stat = "identity", aes(fill=DRUNK_DR))
+
+# State and weather conditions: Cold crash?
+acc$ONES <- 1
+d2 <- acc %>%
+  dplyr::group_by(StateName,WEATHER) %>%
+  dplyr::summarize(TOTAL = sum(ONES)) 
+
+g2 <- ggplot(d2,
+             aes(x = StateName, y = WEATHER))
+g2 + geom_point(aes(size = TOTAL, fill = WEATHER)) + ylim(-1,15) 
+
+
+
