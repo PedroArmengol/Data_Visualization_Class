@@ -12,6 +12,7 @@ library("plyr")
 library("ggrepel")
 library("grid")
 library("gridExtra")
+pdf("/Users/Usuario/Documents/Chicago/DataVis/Data_Visualization_Class/Project1/test2.pdf", onefile = TRUE)
 
 acc2015 <- read.csv("/Users/Usuario/Documents/Chicago/DataVis/Data_Visualization_Class/Project1/accident.csv")
 acc2014 <- read_sas("/Users/Usuario/Documents/Chicago/DataVis/Data_Visualization_Class/Project1/accident.sas7bdat")
@@ -111,7 +112,6 @@ g1 <- g1 + scale_x_continuous(breaks = seq(1,7,1), labels = c("Sun","Mon","Tus",
 g1 <- g1 + scale_fill_discrete(name = "Drunk Status", 
                               labels = c("Non Drunk", "Relatively Drunk", "Very Drunk"))
 g1
-
 # The blammers!
 d2 <- acc %>%
   dplyr::group_by(StateName,YEAR) %>%
@@ -161,6 +161,5 @@ g3 <- g3 + theme(axis.title.x = element_text(size=10, hjust=0.5,angle=0,face="bo
 g3 <- g3 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black"))
 g3 <- g3 + guides(color=guide_legend("Year"))
 g3
-# put different shapes in the scatter points 
 
-#How to export plots to the same pdf?
+dev.off() 
