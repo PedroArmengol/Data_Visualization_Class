@@ -101,19 +101,18 @@ g1 <- g1 + labs(x="",
               y="",
               title="When fun comes to die",
               subtitle="Number of fatalities by drunkness status of the driver and day",
-              note = "Source")
+              caption = "Source: DoT FARS data")
 g1 <- g1 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
 g1 <- g1 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g1 <- g1 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black"))
 g1 <- g1 + theme(axis.title.y = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
 g1 <- g1 + theme(axis.title.x = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
 g1 <- g1 + scale_x_continuous(breaks = seq(1,7,1), labels = c("Sun","Mon","Tus","Wed","Thu","Fri","Sat"))
 g1 <- g1 + scale_fill_discrete(name = "Drunk Status", 
                               labels = c("Non Drunk", "Relatively Drunk", "Very Drunk"))
-                               
 g1
-#Need footnote
 
-# State and weather conditions: Cold crash?
+# The blammers!
 d2 <- acc %>%
   dplyr::group_by(StateName,YEAR) %>%
   dplyr::summarize(FATALS = sum(FATALS)) %>%
@@ -126,19 +125,20 @@ d2 <- acc %>%
   filter(diff > 120)
 
 g2 <- ggplot(d2, aes(x = YEAR, y = FATALS))
-g2 <- g2 + geom_line(aes(colour = StateName)) 
-g1 <- g1 + labs(x="", 
-                y="",
-                title="When fun comes to die",
-                subtitle="Number of fatalities by drunkness status of the driver and day",
-                note = "Source")
-g1 <- g1 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
-g1 <- g1 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
-g1 <- g1 + theme(axis.title.y = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
-g1 <- g1 + theme(axis.title.x = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
-g1 <- g1 + scale_x_continuous(breaks = seq(1,7,1), labels = c("Sun","Mon","Tus","Wed","Thu","Fri","Sat"))
-g1 <- g1 + scale_fill_discrete(name = "Drunk Status", 
-                               labels = c("Non Drunk", "Relatively Drunk", "Very Drunk"))
+g2 <- g2 + geom_line(aes(colour = StateName)) + geom_text_repel(aes(label= FATALS), size = 3)
+g2 <- g2 + labs(x="", 
+                y="Number of fatalities per year",
+                title="The blammers",
+                subtitle="Top four states with higher increase rates (more than 20%) between 2014-2015",
+                caption = "Source: DoT FARS data")
+g2 <- g2 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
+g2 <- g2 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g2 <- g2 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black"))
+g2 <- g2 + theme(axis.title.y = element_text(size=7, hjust=0.5,angle=90,face="bold")) 
+g2 <- g2 + theme(axis.title.x = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
+g2 <- g2 + scale_x_continuous(breaks = seq(2014,2015,1), labels = c("2014","2015"))
+g2 <- g2 + guides(color=guide_legend("State Name"))
+g2
 
 #Increase in rate of Mortality with cold
 d3 <- acc %>%
@@ -146,9 +146,21 @@ d3 <- acc %>%
   dplyr::summarize(FATALS = mean(FATALS), WEATHER = mean(WEATHER)) %>%
   filter(!is.na(StateName))
 
-g3 <- ggplot(d3,
-            aes(x = WEATHER , y = FATALS, colour = factor(YEAR)))
-g3 + geom_point() + geom_smooth(method = "lm", se = FALSE)
+g3 <- ggplot(d3, aes(x = WEATHER , y = FATALS, colour = factor(YEAR)))
+g3 <- g3 + geom_point() + geom_smooth(method = "lm", se = FALSE)
+g3 <- g3 + labs(x="Average Temperature: the bigger, the colder", 
+                y="",
+                title="Cold matters",
+                subtitle="Fatality rate (number of fatalities per accident) at state level",
+                caption = "Source: DoT FARS data",
+                fill = "Year")
+g3 <- g3 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
+g3 <- g3 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g3 <- g3 + theme(axis.title.y = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
+g3 <- g3 + theme(axis.title.x = element_text(size=10, hjust=0.5,angle=0,face="bold")) 
+g3 <- g3 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black"))
+g3 <- g3 + guides(color=guide_legend("Year"))
+g3
 # put different shapes in the scatter points 
 
 #How to export plots to the same pdf?
