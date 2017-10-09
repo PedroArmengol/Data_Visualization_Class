@@ -1,6 +1,7 @@
 # Pedro Armengol 
 # This is an exploratory analysis of the DoT FARS data
 
+
 library("readr")
 library("haven")
 library("dplyr")
@@ -8,6 +9,9 @@ library("tidyr")
 library("stringr")
 library("ggplot2")
 library("plyr")
+library("ggrepel")
+library("grid")
+library("gridExtra")
 
 acc2015 <- read.csv("/Users/Usuario/Documents/Chicago/DataVis/Data_Visualization_Class/Project1/accident.csv")
 acc2014 <- read_sas("/Users/Usuario/Documents/Chicago/DataVis/Data_Visualization_Class/Project1/accident.sas7bdat")
@@ -85,22 +89,66 @@ glimpse(agg_wide)
 ### Charts 
 
 # Day of fatalities and drunk status: When fun comes to die
-d1 <- acc %>%
+d1 <- acc  %>%
   dplyr::group_by(DAY_WEEK,DRUNK_DR) %>%
-  dplyr::summarize(TOTAL = sum(FATALS)) 
+  dplyr::summarize(TOTAL = sum(FATALS)) %>%
+  filter(DRUNK_DR < 3)
+  
   
 g1 <- ggplot(d1, aes(x = DAY_WEEK, y = TOTAL)) 
-g1 + geom_bar(stat = "identity", aes(fill=DRUNK_DR))
+g1 <- g1 + geom_bar(stat = "identity", aes(fill=factor(DRUNK_DR)))
+g1 <- g1 + labs(x="", 
+              y="",
+              title="When fun comes to die",
+              subtitle="Number of fatalities by drunkness status of the driver and day",
+              note = "Source")
+g1 <- g1 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
+g1 <- g1 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g1 <- g1 + theme(axis.title.y = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
+g1 <- g1 + theme(axis.title.x = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
+g1 <- g1 + scale_x_continuous(breaks = seq(1,7,1), labels = c("Sun","Mon","Tus","Wed","Thu","Fri","Sat"))
+g1 <- g1 + scale_fill_discrete(name = "Drunk Status", 
+                              labels = c("Non Drunk", "Relatively Drunk", "Very Drunk"))
+                               
+g1
+#Need footnote
 
 # State and weather conditions: Cold crash?
-acc$ONES <- 1
 d2 <- acc %>%
-  dplyr::group_by(StateName,WEATHER) %>%
-  dplyr::summarize(TOTAL = sum(ONES)) 
+  dplyr::group_by(StateName,YEAR) %>%
+  dplyr::summarize(FATALS = sum(FATALS)) %>%
+  dplyr::group_by(StateName) %>%
+  dplyr::mutate(lag.value = lag(FATALS, n = 1, default = NA)) %>%
+  filter(!is.na(StateName)) %>%
+  mutate(diff = (FATALS/lag.value)*100) %>%
+  mutate(lead.diff = lead(diff)) %>%
+  mutate(diff = ifelse(is.na(diff) == TRUE ,lead.diff,diff)) %>%
+  filter(diff > 120)
 
-g2 <- ggplot(d2,
-             aes(x = StateName, y = WEATHER))
-g2 + geom_point(aes(size = TOTAL, fill = WEATHER)) + ylim(-1,15) 
+g2 <- ggplot(d2, aes(x = YEAR, y = FATALS))
+g2 <- g2 + geom_line(aes(colour = StateName)) 
+g1 <- g1 + labs(x="", 
+                y="",
+                title="When fun comes to die",
+                subtitle="Number of fatalities by drunkness status of the driver and day",
+                note = "Source")
+g1 <- g1 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
+g1 <- g1 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g1 <- g1 + theme(axis.title.y = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
+g1 <- g1 + theme(axis.title.x = element_text(size=7, hjust=1.0,angle=90,face="bold")) 
+g1 <- g1 + scale_x_continuous(breaks = seq(1,7,1), labels = c("Sun","Mon","Tus","Wed","Thu","Fri","Sat"))
+g1 <- g1 + scale_fill_discrete(name = "Drunk Status", 
+                               labels = c("Non Drunk", "Relatively Drunk", "Very Drunk"))
 
+#Increase in rate of Mortality with cold
+d3 <- acc %>%
+  dplyr::group_by(StateName,YEAR) %>%
+  dplyr::summarize(FATALS = mean(FATALS), WEATHER = mean(WEATHER)) %>%
+  filter(!is.na(StateName))
 
+g3 <- ggplot(d3,
+            aes(x = WEATHER , y = FATALS, colour = factor(YEAR)))
+g3 + geom_point() + geom_smooth(method = "lm", se = FALSE)
+# put different shapes in the scatter points 
 
+#How to export plots to the same pdf?
