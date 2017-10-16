@@ -9,8 +9,8 @@ between this two phenomenons is, arguably, the weapons smuggling from the U.S to
 
 Information sources: 
 
-ATF: https://www.atf.gov/ (Firearms industry in the U.S)
-SESNSP: http://secretariadoejecutivo.gob.mx/index.php (murders in Mexico)
-SFT: https://www.statefirearmlaws.org/ (U.S States level firearms policy changes)
+1) ATF: https://www.atf.gov/ (Firearms industry in the U.S)
+2) SESNSP: http://secretariadoejecutivo.gob.mx/index.php (murders in Mexico)
+3) SFT: https://www.statefirearmlaws.org/ (U.S States level firearms policy changes)
 
 
