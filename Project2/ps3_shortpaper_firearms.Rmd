@@ -243,7 +243,7 @@ The objective of this project is to show that the increase of firearms productio
 g3
 ```
 
-A aignal that the profits of an industry as a whole are increasing are the number of consolidations (The Economist, Mar 26,2016): profits aloud increases in investments that are translated into acquisitions of smaller (or less profitable) companies in order to take advantage of the economies of scale. From the previous graph, firearms manufacturing licenses, there can be observe that the industry has reduced its number of players (the licenses have to be transmitted every three years for all the firms in the industry).
+The number of consolidations are a signal that the profits of an industry as a whole are increasing (The Economist, Mar 26,2016): profits can be diverted into investments, for example, the acquisitions of smaller or less profitable companies. From the previous graph, firearms manufacturing licenses, there can be observed that the industry has reduced its number of players (all the firms in the industry have to tramit their licenses every three years).
 
 ## Conclusion
 There is more research to be done to understand the magnitude of the firearms smuggling from the US to Mexico and the impact that this phenomenon has into the violence that Mexico is passing through. However, the initial exploratory data analysis shows that this situation looks like a duck, swims like a duck, and quacks like a duck .... Let's show with further research that is a duck. 
