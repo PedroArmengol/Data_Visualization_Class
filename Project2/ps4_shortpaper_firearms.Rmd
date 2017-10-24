@@ -2,7 +2,9 @@
 title: "Firearms smuggling from the US to Mexico"
 author: "Pedro Armengol"
 date: "19/10/2017"
-output: pdf_document
+output:
+  pdf_document: default
+  word_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -206,11 +208,76 @@ grid.arrange(gp2, gp1)
 ```
 
 ```{r graph6, include=FALSE}
-
+#Graph 6 
+#Tight legislation
+#Number of recent law modifications per State
+legis <- read_excel("/Users/pedro/Documents/DataVis/SFL/sfl_db.xls")
+legis <- subset(legis, year != 2017)
+legis$total <- rowSums(legis[,3:136])
+legis_agg <- legis  %>%
+  dplyr::group_by(state) %>%
+  dplyr::summarize(total = sum(total)) 
+legis_agg$state <- tolower(legis_agg$state)
+#Dataframe states
+states <- map_data("state")
+names(states)[names(states)=="region"] <- "state"
+#Analysis of comun observations
+unique(states$state)
+unique(legis_agg$state)
+elem1 <-  unique(states$state)[unique(states$state) %in% unique(legis_agg$state) == FALSE]
+#Fix tables
+states <- subset(states, state != "district of columbia")
+legis_agg <- subset(legis_agg, state != "alaska" | state != "hawaii")
+#Merge
+legis_map <- merge(legis_agg, states, by = c("state"))
+#Map
+g6 <- ggplot(data = legis_map)  
+g6 <- g6 + geom_polygon(aes(x = long, y = lat, fill = total, group = group))  
+g6 <- g6 + coord_fixed(1.3)
+g6 <- g6 + labs(x="", 
+                y="",
+                title="Getting Thighter",
+                subtitle="Number of state firearms laws 1991-2016",
+                caption = "Source: State Firearm Law Database")
+g6 <- g6 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
+g6 <- g6 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g6 <- g6 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black")) 
+g6 <- g6 + theme(axis.title.y = element_text(size=11, hjust=0.5,angle=90,face="bold")) 
+g6 <- g6 + theme(axis.title.x = element_text(size=11, hjust=0.5,angle=0,face="bold"))
+g6 <- g6 + theme(
+  axis.line = element_blank(),
+  axis.ticks = element_blank(),
+  panel.border = element_blank(),
+  panel.grid = element_blank(),
+  axis.text = element_blank()
+)
+g6 <- g6 + scale_fill_gradient(low = "white", high = "deepskyblue4") ####Fill colors of the map
+g6 <- g6 + theme(panel.background = element_rect(fill = 'white', colour = 'white'))
+g6 <- g6 + guides(fill=guide_legend(title=""))
+g6
 ```
 
 ```{r graph7, include=FALSE}
-
+#Graph 7
+#Correlation between number of licenses and firearms laws for each state
+licenses_state <- read_csv("/Users/pedro/Documents/DataVis/ATF/license_state.csv")
+names(licenses_state)[names(licenses_state)=="State"] <- "state"
+licenses_state$state <- tolower(licenses_state$state)
+#merge licenses and laws
+legis_licenses <- merge(legis_agg, licenses_state, by = c("state"))
+g7 <- ggplot(legis_licenses, aes(FFL_Population,total))
+g7 <- g7 + geom_point(colour = "blue", size = 3)
+g7 <- g7 + labs(x="Number of licenses", 
+                y="Number of laws",
+                title="Legislation and firearms",
+                subtitle="Number of state firearms laws 1991-2016 and number of licenses per state (2016) ",
+                caption = "Source: State Firearm Law Database and ATF")
+g7 <- g7 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
+g7 <- g7 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g7 <- g7 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black")) 
+g7 <- g7 + theme(axis.title.y = element_text(size=11, hjust=0.5,angle=90,face="bold")) 
+g7 <- g7 + theme(axis.title.x = element_text(size=11, hjust=0.5,angle=0,face="bold")) 
+g7
 ```
 
 
@@ -221,6 +288,7 @@ grid.arrange(gp2, gp1)
 
 Since the last decade, the level of murders in Mexico has more than double. A lot of reasons have been blame as a consequence: an increase in drug trafficking activities, political fragmentation, a federal government frontal war against drugs, a cartel decapitation strategy even changes in the droop policy of Colombia. However, the illegal smuggling of firearms from the US to Mexico rarely has been named (with the exception of Oendrila Dube, David Esparza,David Shrink among other researchers that had done work in this field). In the previous graph, can be observed that the rifle production and the murders in Mexico follow a similar trend during the last years (there is a positive correlation -0.54- between them).
 
+
 ## Figure 2
 ```{r figure 2, echo =FALSE}
 g4
@@ -228,6 +296,7 @@ g4
 ```
 
 According to Dube A., Dube O., & Garc??a-Ponce (2011), the north of Mexico suffered more quickly than the rest of the country from the Federal Assault Weapons Ban lift **(FAWB)**. The previous graph show the total number of murders by State and year in the States of Mexico that have frontier with the US. There was a change in the number of murders by State and year before and after the **FAWB**. Remarkably, Chihuahua had an evident spike leaded by the Ciudad Ju??rez war between 2009 and 2011. 
+
 
 ## Figure 3
 ```{r figure 3, echo =FALSE}
@@ -252,6 +321,22 @@ g3
 ```
 
 The number of consolidations are a signal that the profits of an industry as a whole are increasing (The Economist, Mar 26,2016): profits can be diverted into investments, for example, the acquisitions of smaller or less profitable companies. From the previous graph, firearms manufacturing licenses, there can be observed that the industry has reduced its number of players (all the firms in the industry have to tramit their licenses every three years).
+
+
+## Figure 6
+```{r figure 6, echo =FALSE}
+g6
+```
+
+With data of the NGO State Firearm Law Database, there was built and index of state tightness over firearms production and use. There can be seen that states like California, New York and Illinois hava tighter regulations than states like Texas, Arizona, Wyoming or Montana.
+
+
+## Figure 7
+```{r figure 7, echo =FALSE}
+g7
+```
+
+There is not a clear correlation pattern between firearms licenses in 2016 and number of state firearms laws between 1991 and 2016. However, the estimation was not made to account for the state population (the metrics "per capita" could be different).
 
 ## Conclusion
 There is more research to be done to understand the magnitude of the firearms smuggling from the US to Mexico and the impact that this phenomenon has into the violence that Mexico is passing through. However, the initial exploratory data analysis shows that this situation looks like a duck, swims like a duck, and quacks like a duck .... Let's show with further research that is a duck. 
