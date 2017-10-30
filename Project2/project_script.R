@@ -1,7 +1,8 @@
 rm(list=ls())
 #Script to create the firearms smuggling platform
-devtools::install_github("dkahle/ggmap")
 
+library("mxmaps") # Diego del valle library about maps of Mexico
+library("maptools")
 library("stringr")
 library("devtools")
 library("extrafont")
@@ -126,7 +127,7 @@ crimes <- subset(crimes, ANO != 2017 & MODALIDAD == "HOMICIDIOS" & TIPO == "DOLO
 crimes$Murders <- rowSums(crimes[,7:18])
 #Subset by the neighbour states: Baja California, Sonora, Chihuahua, Coahuila, Nuevo Le??n, Tamaulipas
 crimes <- subset(crimes, ENTIDAD == "BAJA CALIFORNIA" | ENTIDAD == "SONORA" | ENTIDAD == "CHIHUAHUA" | ENTIDAD == "COAHUILA" | ENTIDAD == "NUEVO LEON" | ENTIDAD == "TAMAULIPAS")
-crimes <- crimes[c("ENTIDAD", "ANO", "total")]
+crimes <- crimes[c("ENTIDAD", "ANO", "Murders")]
 g4 <- ggplot(crimes, aes(ANO, ENTIDAD))  
 g4 <- g4 + geom_tile(aes(fill = Murders), colour = "white")
 g4 <- g4 + scale_fill_gradient(low = "white", high = "orangered3")
@@ -231,7 +232,7 @@ g6 <- g6 + geom_polygon(aes(x = long, y = lat, fill = total, group = group))
 g6 <- g6 + coord_fixed(1.3)
 g6 <- g6 + labs(x="", 
                 y="",
-                title="Getting Thighter",
+                title="Getting Tighter",
                 subtitle="Number of state firearms laws 1991-2016",
                 caption = "Source: State Firearm Law Database")
 g6 <- g6 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
@@ -271,5 +272,34 @@ g7 <- g7 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black"))
 g7 <- g7 + theme(axis.title.y = element_text(size=11, hjust=0.5,angle=90,face="bold")) 
 g7 <- g7 + theme(axis.title.x = element_text(size=11, hjust=0.5,angle=0,face="bold")) 
 g7
+
+#Graph 8
+
+#Crimes
+crimes <- read_excel("/Users/pedro/Documents/DataVis/SESNSP/crimen.xls")
+names(crimes)[names(crimes)=="CLAVE MARCO GEOESTADISTICO NAL"] <- "id2"
+crimes <- subset(crimes, ANO != 2017 & MODALIDAD == "HOMICIDIOS" & TIPO == "DOLOSOS" & SUBTIPO == "CON ARMA DE FUEGO")
+crimes$Murders <- rowSums(crimes[,7:18])
+crimes <- crimes[c("ENTIDAD", "ANO",  "Murders","id2")]
+crimes_agg <- crimes  %>%
+  dplyr::group_by(id2) %>%
+  dplyr::summarize(total = sum(Murders)) 
+
+df_mxstate$value <- crimes_agg$total
+g8 <- mxstate_choropleth(df_mxstate,
+                   title = "Total Murders, by state",
+                   num_colors = 1)
+g8 <- g8 + labs(x="", 
+                y="",
+                title="Bloody Mess",
+                subtitle="Number of Murders by Firearm 1997-2016 in Mexico: State level",
+                caption = "SESNSP (Executive Secretariat of the Public Security Council: Mexico)")
+g8 <- g8 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
+g8 <- g8 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g8 <- g8 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black")) 
+g8
+
+#Graph 9
+#Map of regulation in the US (More realistic approach)
 
 
