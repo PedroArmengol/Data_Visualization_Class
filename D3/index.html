@@ -16,12 +16,21 @@
 		<script type="text/javascript">
 
 
-			/*
-			Import data CSV
+			
+			//Import data CSV
 
-			var dataset;
+			var rowConvert = function(d) {
 
-			d3.csv("aft.csv", function(error, data) {
+				return {
+
+					Type: d.Type,
+					Total: parseFloat(d.Total)
+				};
+
+			}
+
+
+			d3.csv("atf.csv", rowConvert, function(error, data) {
 
 				if (error) {
 
@@ -35,38 +44,31 @@
 
 			}
 
-			}); */
+			}); 
 
-			// Import data a json
 
-			
 
-			var dataset = [
-  {
-    "Type": "Pistols",
-    "Total": 48195129
-  },
-  {
-    "Type": "Revolvers",
-    "Total": 15242990
-  },
-  {
-    "Type": "Rifles",
-    "Total": 51338005
-  },
-  {
-    "Type": "Shotguns",
-    "Total": 26150018
-  },
-  {
-    "Type": "Misc. Firearms",
-    "Total": 2716639
-  },
-  {
-    "Type": "",
-    "Total": ""
-  }
-]
+
+
+
+/*
+
+			var i;
+			var data = [];
+
+			for(i = 0; i<dataset.length; i++){
+
+				data.push({"type": dataset.Type[i], "total": dataset.Total[i]});
+
+			};
+
+
+			d3.select("body").selectAll("p")
+			.data(dataset)
+			.enter()
+			.append("p")
+			.text(function(d) { return d; });
+*/
 
 		</script>
 
