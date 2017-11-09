@@ -16,13 +16,57 @@
 		<script type="text/javascript">
 
 
-			//Import data
+			/*
+			Import data CSV
 
-			d3.csv("aft.csv", function(data) {
+			var dataset;
 
-				console.log(data);
-				
-			});
+			d3.csv("aft.csv", function(error, data) {
+
+				if (error) {
+
+					console.log(error);
+
+				} else {
+
+					console.log(data);
+
+				dataset = data;
+
+			}
+
+			}); */
+
+			// Import data a json
+
+			
+
+			var dataset = [
+  {
+    "Type": "Pistols",
+    "Total": 48195129
+  },
+  {
+    "Type": "Revolvers",
+    "Total": 15242990
+  },
+  {
+    "Type": "Rifles",
+    "Total": 51338005
+  },
+  {
+    "Type": "Shotguns",
+    "Total": 26150018
+  },
+  {
+    "Type": "Misc. Firearms",
+    "Total": 2716639
+  },
+  {
+    "Type": "",
+    "Total": ""
+  }
+]
 
 		</script>
 
