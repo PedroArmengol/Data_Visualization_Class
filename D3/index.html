@@ -17,6 +17,7 @@
   			width: 20px;
   			height: 75px;
   			background-color: teal;
+  			margin-right: 2px;
 
   		}
 
@@ -28,6 +29,11 @@
 
 
 		<script type="text/javascript">
+
+			//Variables
+			var w = 500;
+			var h = 100;
+			var bar_padding = 1;
 
 
 			
@@ -71,12 +77,14 @@
 			};
 
 			*/
+
+			//First Bar chart (With Divs)
+
 			var dataset1 = [5,10,15,20,25,30];
 
-
-
+			/*
 			d3.select("body").selectAll("div")
-			.data(dataset1)
+			.data(dataset1) // this function loop over every data element and embedded every data point to the estructure created adove ("div")
 			.enter() // for what?
 			.append("div")
 			.attr("class","bar")
@@ -85,6 +93,33 @@
 				return barHeight + "px";
 
 			});
+			*/
+
+			// SVG
+
+			var svg = d3.select("body").append("svg")
+
+			svg.attr("height",h)
+			   .attr("width",w);
+
+			//Second Bar chart (with Rect)
+			svg.selectAll("rect")
+				.data(dataset1)
+				.enter()
+				.append("rect")
+				.attr("x", function(d,i) {
+
+					return i*(w/dataset1.length); // 
+
+				})
+				.attr("y",0)
+				.attr("width", w/dataset1.length - bar_padding)
+				.attr("height", function(d) {
+
+					return d;
+				});
+
+
 
 
 
