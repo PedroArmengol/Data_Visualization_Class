@@ -4,159 +4,20 @@
 	<head>
 		<meta charset="utf-8">
 		 <script type="text/javascript" src="./d3/d3.js"></script>
-
+		  <link rel="stylesheet" type="text/css" href="./style.css"/>
 
 		<title>D3 Template</title>
-		<h1>First D3 Project</h1>
-
-		<style>
-
-	
-
-			.bar {
-				fill:steelblue;
-			}
-
-		/*
-
-			.line {
-				fill:none;
-				stroke:yellow;
-				stroke-dasharray:5,5;
-
-			}
-
-		*/
-
-		</style>
+		<h1>Number of firearms by type</h1>
 
 		<body>
 
 			<div id = "chart"></div>
 
-		<script type="text/javascript">
+	   <script type="text/javascript" src="./script.js"></script>	
 		
+	   		<p1>Data Source: </p1><p2><a href="https://www.atf.gov/resource-center/docs/undefined/firearms-commerce-united-states-annual-statistical-update-2017/download"> ATF data: U.S Fireams Commerce Report </a><br>The data include all the weapons produced from 1986-2015 in the United States of America</br></p2>
+	   		
 
-			  function rowConverter(d) {
-			  	return {
-			  		type: d.Type,
-			  		total: +d.Total
-		
-			  	};
-
-			  }
-
-			  d3.csv("atf.csv", rowConverter, function(data) {
-
-			  	var dataset = data;
-
-			  	console.log(dataset);
-
-			  	createChart(dataset);
-
-
-
-			  });
-
- 				
-				 
-
-			  function createChart(dataset) {
-			  	var width = 1000;
-			  	var height = 500;
-			  	var marginleft = 20;
-			  	var marginright = 20;
-			  	var margintop = 20;
-			  	var marginbottom = 20;
-			  	var bar_padding = 1;
-
-
-			  	console.log("hello")
-
-			  	var xScale = d3.scaleBand()
-						.domain(dataset.map(function (d) { return d.type; }))
-						.rangeRound([0, width])
-						.paddingInner(0.4)
-						.align(0.1);
-
-			  	var yScale = d3.scaleLinear()
-			  					.domain([
-			  						d3.min(dataset,function(d) {return d.total;}),
-			  						d3.max(dataset,function(d) {return d.total;})
-			  						])
-			  					.range([height-marginbottom,margintop]);
-			  		
-
-			  	var svg = d3.select("#chart")
-			  				.append("svg")
-			  				.attr("width",width)
-			  				.attr("height",height);
-
-			  	var xaxis = svg.append("g")
-			  		.attr("transform","translate(0,"+(height-marginbottom)+")")
-			  		.call(d3.axisBottom(xScale));
-			  		
-			  	var yaxis = svg.append("g")
-			  		.attr("transform","translate("+(marginleft)+",0)")
-			  		.call(d3.axisLeft(yScale));	
-
-			  	
-			  //Everything more or less cool
-
-			  for(var i = 0; i < dataset.length; i ++) {
-
-			  	console.log(dataset[i].total);
-
-			  };
-			  
-
-			  svg.selectAll("rect")
-				.data(dataset)
-				.enter()
-				.append("rect")
-				.attr("x", function(d,i) {
-
-					return i*(width/dataset.length) +25; // 
-
-				})
-				.attr("y", -40)
-				.attr("width", width/dataset.length - bar_padding)
-				.attr("height", function(d) {
-
-					return d.total/70000;
-				})
-				.attr("fill", function(d) { //Color of different insentity
-					return "rgb(" + Math.round(d.total/100000) + ", 0, 0)";
-
-				});
-		
-
-		/*
-
-			  	var area = d3.area()
-			  				.x(function(d) {return xScale(d.date);})
-			  				.y0(function(d) {return yScale(d.low);})
-			  				.y1(function(d) {return yScale(d.high);});
-
-			  	svg.append("path")
-			  	.datum(dataset)
-			  	.attr("class","area")
-			  	.attr("d",area);
-
-			  var line = d3.line()
-			  .x(function(d) {return xScale(d.date);})
-			  .y(function(d) {return yScale(d.avg);});
-
-			  	svg.append("path")
-			  		.datum(dataset)
-			  		.attr("class","line")
-			  		.attr("d",line);
-		*/
-
-			  }
-		
-
-		</script>
 		</body>
 	</head>
 </html>
