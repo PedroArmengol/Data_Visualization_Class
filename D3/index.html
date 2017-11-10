@@ -7,6 +7,20 @@
 
   		<title>D3.js Intro</title>
 
+  		<style>
+
+  		 /* CSS */
+
+  	 
+  		div.bar {
+  			display: inline-block;
+  			width: 20px;
+  			height: 75px;
+  			background-color: teal;
+
+  		}
+
+  		</style>
 
 	</head>
 
@@ -30,7 +44,7 @@
 			}
 
 
-			d3.csv("atf.csv", rowConvert, function(error, data) {
+			var dataset =d3.csv("atf.csv", rowConvert, function(error, data) {
 
 				if (error) {
 
@@ -40,35 +54,39 @@
 
 					console.log(data);
 
-				dataset = data;
+				dataset = data; //What is this??
 
 			}
 
 			}); 
 
+			/*
 
+			var total = [];
+			for(var i = 0; i<7; i++) {
 
-
-
-
-/*
-
-			var i;
-			var data = [];
-
-			for(i = 0; i<dataset.length; i++){
-
-				data.push({"type": dataset.Type[i], "total": dataset.Total[i]});
+				//console.log(i);
+				total.push(dataset[i].Total);
 
 			};
 
+			*/
+			var dataset1 = [5,10,15,20,25,30];
 
-			d3.select("body").selectAll("p")
-			.data(dataset)
-			.enter()
-			.append("p")
-			.text(function(d) { return d; });
-*/
+
+
+			d3.select("body").selectAll("div")
+			.data(dataset1)
+			.enter() // for what?
+			.append("div")
+			.attr("class","bar")
+			.style("height", function(d) {
+				var barHeight = d*5;
+				return barHeight + "px";
+
+			});
+
+
 
 		</script>
 
