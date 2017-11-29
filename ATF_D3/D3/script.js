@@ -59,11 +59,11 @@ function createChart(d){
 
             return "point_2014";
 
-          if (d.year == 2015)
+           } else if (d.year == 2015) {
 
-            return "point_2015";
+            return "point_2015"; 
 
-          if (d.year == 2016)
+          } else if (d.year == 2016) {
 
             return "point_2016";
 
@@ -82,7 +82,7 @@ function createChart(d){
 
     svg.append("g")
         .attr("class", "axis")
-        .attr("transform", "translate(" + (margin.left-barPadding*2) + "," + margin.top + ")")
+        .attr("transform", "translate(" + (margin.left) + "," + margin.top + ")")
         .call(yAxis);
 
     //Y axis label
@@ -99,14 +99,14 @@ function createChart(d){
  
     svg.append("g")
         .attr("class", "axis")
-        .attr("transform", "translate(" + margin.left + "," + (margin.top+height+barPadding*2) + ")")
+        .attr("transform", "translate(" + margin.left + "," + (margin.top+height - 30) + ")")
         .call(xAxis);
 
     //X axis label
     svg.append("text")
         .attr("class", "axis_label")
         .text("Longitude")
-        .attr("transform", "translate("+ (margin.left + width/2) +"," + (margin.top+height+barPadding*9) + ")")
+        .attr("transform", "translate("+ (margin.left + width/2) +"," + (margin.top+height+barPadding*5) + ")")
         .attr("text-anchor", "middle");
 
     //Title & Subtitle
@@ -119,8 +119,8 @@ function createChart(d){
     svg.append("text")
         .attr("id", "subtitle")
         .attr("x", margin.left)
-        .attr("y", margin.top/2)
-        .text("Time window: 2014-2017 (considering june as the benchmark)")
+        .attr("y", margin.top/1.5)
+        .text("Time window: 2014-2017 (considering June as the benchmark)")
 
     //Add Legend
     colors = ["#e74c3c"," #2ecc71"," #bfc9ca"," #3498db"]
@@ -131,15 +131,15 @@ function createChart(d){
                     .enter().append("g");
  
     legend.append("rect")
-      .attr("x", margin.left + 150)
-      .attr("y", function(d, i) { return height + margin.top + 60*(i-4); })
+      .attr("x", margin.left + 100)
+      .attr("y", function(d, i) { return height + margin.top + 40*(i-4) - 100; })
       .attr("width", 30)
       .attr("height", 30)
       .style("fill", function(d, i) {return colors[i];});
 
     legend.append("text")      
-      .attr("x", margin.left + 190)
-      .attr("y", function(d, i) { return height + margin.top + 20 + 60*(i-4); })
+      .attr("x", margin.left + 140)
+      .attr("y", function(d, i) { return height + margin.top + 20 + 40*(i-4) - 100; })
       .text(function(d, i) {return texts[i];})
       .attr("class", "legend_label");
 
@@ -148,10 +148,8 @@ function createChart(d){
        .attr("id", "caption")
        .attr("x", width/2 + 100 )
        .attr("y", margin.top+height+margin.bottom - 10)
-       .text("Source: Listing of Federal Firearms Licensees (FFLs) published by the Bureau of Alcohol, Tobacco, Firearms and Explosives (ATF)")
+       .text("Source: Listing of Federal Firearms Licensees (FFLs) published by the ATF")
        .attr("text-anchor", "middle")
 
-
-  
    
   };
