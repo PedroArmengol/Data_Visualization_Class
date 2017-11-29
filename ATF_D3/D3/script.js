@@ -1,4 +1,4 @@
-var margin = {top: 200, bottom: 75, left: 100, right: 100}
+var margin = {top: 100, bottom: 75, left: 100, right: 100}
 var width = 1100 - margin.left - margin.right;
 var height = 800 - margin.top - margin.bottom;
 var barPadding = 5;
@@ -106,8 +106,50 @@ function createChart(d){
     svg.append("text")
         .attr("class", "axis_label")
         .text("Longitude")
-        .attr("transform", "translate("+ (margin.left + width/2) +"," + (margin.top+height+barPadding*12) + ")")
+        .attr("transform", "translate("+ (margin.left + width/2) +"," + (margin.top+height+barPadding*9) + ")")
         .attr("text-anchor", "middle");
+
+    //Title & Subtitle
+    svg.append("text")
+        .attr("id", "title")
+        .attr("x", margin.left)
+        .attr("y", margin.top/3)
+        .text("Armories that have change of state address")
+
+    svg.append("text")
+        .attr("id", "subtitle")
+        .attr("x", margin.left)
+        .attr("y", margin.top/2)
+        .text("Time window: 2014-2017 (considering june as the benchmark)")
+
+    //Add Legend
+    colors = ["#e74c3c"," #2ecc71"," #bfc9ca"," #3498db"]
+    texts = ["2014", "2015","2016","2017"]
+
+    var legend = svg.selectAll("legend")
+                    .data(colors)
+                    .enter().append("g");
+ 
+    legend.append("rect")
+      .attr("x", margin.left + 150)
+      .attr("y", function(d, i) { return height + margin.top + 60*(i-4); })
+      .attr("width", 30)
+      .attr("height", 30)
+      .style("fill", function(d, i) {return colors[i];});
+
+    legend.append("text")      
+      .attr("x", margin.left + 190)
+      .attr("y", function(d, i) { return height + margin.top + 20 + 60*(i-4); })
+      .text(function(d, i) {return texts[i];})
+      .attr("class", "legend_label");
+
+    //Caption
+    svg.append("text")
+       .attr("id", "caption")
+       .attr("x", width/2 + 100 )
+       .attr("y", margin.top+height+margin.bottom - 10)
+       .text("Source: Listing of Federal Firearms Licensees (FFLs) published by the Bureau of Alcohol, Tobacco, Firearms and Explosives (ATF)")
+       .attr("text-anchor", "middle")
 
 
   
