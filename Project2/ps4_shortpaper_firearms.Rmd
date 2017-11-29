@@ -9,6 +9,10 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library("mxmaps") 
+library("maptools")
+library("stringr")
+library("devtools")
 library("extrafont")
 library("ggthemes")
 library("readr")
@@ -25,6 +29,8 @@ library("gdata")
 library("readxl")
 library("scales")
 library("gtable")
+library("ggmap")
+
 ```
 
 
@@ -280,6 +286,33 @@ g7 <- g7 + theme(axis.title.x = element_text(size=11, hjust=0.5,angle=0,face="bo
 g7
 ```
 
+```{r graph8, include=FALSE}
+#Crimes
+crimes <- read_excel("/Users/pedro/Documents/DataVis/SESNSP/crimen.xls")
+names(crimes)[names(crimes)=="CLAVE MARCO GEOESTADISTICO NAL"] <- "id2"
+crimes <- subset(crimes, ANO != 2017 & MODALIDAD == "HOMICIDIOS" & TIPO == "DOLOSOS" & SUBTIPO == "CON ARMA DE FUEGO")
+crimes$Murders <- rowSums(crimes[,7:18])
+crimes <- crimes[c("ENTIDAD", "ANO",  "Murders","id2")]
+crimes_agg <- crimes  %>%
+  dplyr::group_by(id2) %>%
+  dplyr::summarize(total = sum(Murders)) 
+
+df_mxstate$value <- crimes_agg$total
+g8 <- mxstate_choropleth(df_mxstate,
+                   title = "Total Murders, by state",
+                   num_colors = 1)
+g8 <- g8 + labs(x="", 
+                y="",
+                title="Bloody Mess",
+                subtitle="Number of Murders by Firearm 1997-2016 in Mexico: State level",
+                caption = "SESNSP (Executive Secretariat of the Public Security Council: Mexico)")
+g8 <- g8 + theme(plot.title=element_text(size=15, hjust=0.0, face="bold", colour="black", vjust=-1))
+g8 <- g8 + theme(plot.subtitle=element_text(size=10, hjust=0.0, face="italic", color="maroon"))
+g8 <- g8 + theme(plot.caption=element_text(size=10, hjust=0.0, color="black")) 
+g8
+
+```
+
 
 ## Figure 1
 ```{r figure 1, echo=FALSE}
@@ -337,6 +370,15 @@ g7
 ```
 
 There is not a clear correlation pattern between firearms licenses in 2016 and number of state firearms laws between 1991 and 2016. However, the estimation was not made to account for the state population (the metrics "per capita" could be different).
+
+
+## Figure 8
+```{r figure 8, echo =FALSE}
+ g8
+```
+
+The states in Mexico with the highest level of murders by firearms are Chihuahua, Sonora (in the north) and Guerrero in the south. Let's explore which is the proportion of them caused by the U.S illegal smuggling of firearms.
+
 
 ## Conclusion
 There is more research to be done to understand the magnitude of the firearms smuggling from the US to Mexico and the impact that this phenomenon has into the violence that Mexico is passing through. However, the initial exploratory data analysis shows that this situation looks like a duck, swims like a duck, and quacks like a duck .... Let's show with further research that is a duck. 
